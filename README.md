@@ -1,6 +1,7 @@
-# React + Tailwind CSS
+# Lottery Game based on Solana
 
-## Tech Stack
+
+## Tech Stack - React + Tailwind CSS
 
 **Client:** React, Redux, TailwindCSS
 

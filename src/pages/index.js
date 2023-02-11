@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="body-div w-screen h-screen">
+      <div className="body-div w-auto h-auto sm:h-screen md:h-screen">
         <div className="grid grid-flow-col grid-rows-2 sm:grid-rows-none grid-cols-12 pt-2 px-2 md:px-10 h-36">
           <div className="row-span-auto col-span-12 sm:col-span-7 md:col-span-7 flex flex-auto justify-center sm:justify-around md:justify-start gap-2">
             <img className="grow w-8 sm:w-12 h-8 sm:h-12 my-auto ml-4" src="assets/image/discord.png" alt="" />
@@ -62,7 +62,7 @@ const Home = () => {
               <p className="sol-title text-[30px] sm:text-[50px] md:text-[60px]">2500 SOL</p>
               <div className="buy-button mt-[70px] sm:mt-[120px] lg:mt-[180px] mb-[20px] sm:mb-[30px] py-[5px] w-[110px] sm:w-40 text-[15px] sm:text-[20px]">BUY TICKET</div>
             </div>
-            <img className="col-span-1 justify-self-end hologram mt-[5px] h-64 w-48 sm:h-96 sm:w-96 lg:h-[440px] lg:w-[500px] sm:mb-[10px] z-20" alt=""></img>
+            <img className="col-span-1 justify-self-end hologram m-auto sm:my-[40px] h-[200px] w-[220px] sm:h-[300px] sm:w-96 lg:h-[400px] lg:w-[500px] sm:mb-[30px] z-20" alt=""></img>
             <div className="solana-div h-5/6 z-10">
             </div>
           </div>

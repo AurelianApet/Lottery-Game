@@ -19,7 +19,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "dev:start": "react-scripts --openssl-legacy-provider start",
+    "dev:start": "react-scripts start",
     "dev:css": "NODE_ENV=development postcss src/assets/tailwind.css -o src/assets/main.css  -w",
     "dev": "run-p dev:*",
     "start": "react-scripts --openssl-legacy-provider start",

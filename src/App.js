@@ -9,7 +9,9 @@ import {
   Redirect,
   BrowserRouter as Router,
 } from "react-router-dom";
-import Home from "./pages";
+import BuyTicketPage from "./pages/buyTicketPage";
+import WinnerPage from "./pages/winnerPage";
+import AdminPage from "./pages/adminPage";
 import ErrorPage from "./pages/error";
 
 function App() {
@@ -25,7 +27,9 @@ function App() {
         <Web3ReactProvider getLibrary={getLibrary}>
           <Router>
             <Switch>
-              <Route path={`/`} exact render={(props) => <Home {...props} />} />
+              <Route path={`/`} exact render={(props) => <BuyTicketPage {...props} />} />
+              <Route path={`/winner`} exact render={(props) => <WinnerPage {...props} />} />
+              <Route path={`/admin`} exact render={(props) => <AdminPage {...props} />} />
               <Route
                 path="/error"
                 exact

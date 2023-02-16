@@ -1,36 +1,11 @@
 import React, { Fragment } from "react";
-import { useWeb3React } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { ethers, BigNumber } from "ethers";
+import { WalletMultiButton, setVisible } from '@solana/wallet-adapter-react-ui';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 const WinnerPage = () => {
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
 
-    const {
-        activate,
-        deactivate,
-        library,
-        account
-    } = useWeb3React();
-
-    const injected = new InjectedConnector({
-        supportedChainIds: [1, 3, 4, 5, 42, 97],
-    });
-
-    const onConnectClicked = async () => {
-        try {
-            await activate(injected);
-        } catch (ex) {
-            console.log(ex);
-        }
-    };
-
-    const onDisconnectClicked = () => {
-        try {
-            deactivate();
-        } catch (ex) {
-            console.log(ex);
-        }
-    };
 
   return (
     <>
@@ -42,8 +17,9 @@ const WinnerPage = () => {
             <img className="grow my-auto top-title w-64" src="assets/image/toptitle.png" alt="" />
           </div>
           <div className="row-span-auto col-span-12 sm:col-start-8 md:col-start-9 sm:col-span-5 md:col-span-4 my-auto flex flex-auto justify-evenly gap-1">
-            <div className="top-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Result</div>
-            <div className="top-button connect-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Connect Wallet</div>
+            {/* <div className="top-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Result</div>
+            <div className="top-button connect-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Connect Wallet</div> */}
+            <WalletMultiButton />
           </div>
         </div>
         <div className="main-div mx-auto w-11/12 sm:w-9/12">

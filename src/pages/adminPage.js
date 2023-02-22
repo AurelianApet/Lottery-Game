@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { getCurrentRound, startRound, withdraw } from "../utils/lottery";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 let init = true
 const AdminPage = () => {
@@ -20,7 +21,7 @@ const AdminPage = () => {
   })
   const [timeSecond, setTimeSecond] = useState(0);
 
-  if(wallet.publicKey != undefined && init){
+  if(wallet.publicKey !== null && init){
     getCurrentRound(connection.connection, wallet).then((res) => {
       setRoundData(res)
     })
@@ -42,11 +43,32 @@ const AdminPage = () => {
   }, [timeSecond])
 
   const handleStartNewRound = async () => {
-    await startRound(connection.connection, wallet, (Number(roundData.roundName)+1).toString(), 10000, 12 * 3600)
+    if(wallet.publicKey === null) {
+      NotificationManager.warning("", "Please connect Wallet!", 5000)
+      return;
+    }
+    let response = await startRound(connection.connection, wallet, (Number(roundData.roundName)+1).toString(), 10000, 24 * 3600)
+    console.log("response", response)
+    if(response) {
+      NotificationManager.success("", `Start New Round ${Number(roundData.roundName) + 1}`, 5000)
+    } else {
+      NotificationManager.error("Please check your Wallet", `Failed starting New Round ${Number(roundData.roundName) + 1}`, 5000)
+    }
   }
 
   const handleWithdraw = async () => {
-    await withdraw(connection.connection, wallet, roundData.tvl, roundData.roundName)
+    if(wallet.publicKey === null) {
+      NotificationManager.warning("", "Please connect Wallet!", 5000)
+      return;
+    }
+
+    let response = await withdraw(connection.connection, wallet, roundData.tvl, roundData.roundName)
+    console.log("response", response)
+    if(response) {
+      NotificationManager.success("", "Withdraw Success", 5000)
+    } else {
+      NotificationManager.success("Please check your Wallet", "Withdraw failed", 5000)
+    }
   }
 
   return (
@@ -68,7 +90,7 @@ const AdminPage = () => {
               <div className="solana-div h-3/4 z-10 sm:hidden">
               </div>
               <p className="jackpot-title text-[23px] sm:text-[45px] mt-12 md:mt-24 z-20 pl-6 sm:pl-10">
-                Round {roundData.roundName === "0" ? "1": roundData.roundName}: {roundData.roundName == "0" ? "Not started": (roundData.finished ? "Finished" : "In progress")} </p>
+                Round {roundData.roundName === "0" ? "1": roundData.roundName}: {roundData.roundName === "0" ? "Not started": (roundData.finished ? "Finished" : "In progress")} </p>
               <div className="grid grid-flow-col grid-cols-3 mt-[40px] sm:mt-[90px] md:mt-[50px] lg:mt-[130px] mb-[6px] z-20 justify-items-center">
                 <div className="col-span-1 time-show-button sm:mb-[60px] py-[18px] w-[90px] sm:w-32 text-[20px] sm:text-[50px]">{parseInt(timeSecond / 3600)}h</div>
                 <div className="col-span-1 time-show-button sm:mb-[60px] py-[18px] w-[90px] sm:w-32 text-[20px] sm:text-[50px]">{parseInt(timeSecond % 3600 / 60)}m</div>
@@ -90,6 +112,7 @@ const AdminPage = () => {
                   <div className="col-span-1 buy-button mt-[30px] sm:mt-[10px] pt-[10px] sm:pt-[5px] w-[160px] sm:w-56 text-[20px] sm:text-[25px] justify-self-end"
                   disabled={!roundData.finished}
                   onClick={() => {handleStartNewRound()}}
+                  // disable this button when roundData.finished == false || roundData.claimed == false
                   > START ROUND {Number(roundData.roundName)+1}</div>
                 </div>
               </div>
@@ -107,12 +130,13 @@ const AdminPage = () => {
               <p className="deps-title text-[23px] md:text-[30px]">Tickets Sold</p>
             </div>
             <div className="md:col-span-1 info-div px-[30px] sm:px-[20px] py-[15px] sm:py-[20px]">
-              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{roundData.tvl/1e9} SOL</p>
+              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{roundData.tvl} SOL</p>
               <p className="deps-title text-[23px] md:text-[30px]">Jackpot</p>
             </div>
           </div>
         </div>
       </div>
+      <NotificationContainer/>
     </>
   );
 }

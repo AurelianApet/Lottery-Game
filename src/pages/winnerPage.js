@@ -1,10 +1,56 @@
-import React, { Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { getCurrentRound, claim } from "../utils/lottery";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
+let init = true;
 const WinnerPage = () => {
   const connection = useConnection();
   const wallet = useWallet();
+
+  const [roundData, setRoundData] = useState({
+    roundName: "0",
+    totalTicket : 0,
+    ticketSold : 0,
+    timeRemained : 0,
+    winningTicket : 0,
+    tvl: 0,
+    finished: true,
+    claimed: true
+  })
+  const [timeSecond, setTimeSecond] = useState(0);
+
+  if(wallet.publicKey !== null && init){
+    getCurrentRound(connection.connection, wallet).then((res) => {
+      setRoundData(res)
+    })
+    init = false
+  }
+
+  useEffect(() => {
+    if(parseInt(roundData.timeRemained) > 0)
+      setTimeSecond(parseInt(roundData.timeRemained))
+  }, [roundData])
+
+  useEffect(() => {
+    if(timeSecond > 0) {
+    const intervalId = setInterval(() => {
+        setTimeSecond((t) => t - 1);
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [timeSecond])
+
+  const handleClaim = async () => {
+    let response = await claim(connection.connection, wallet, roundData.roundName);
+    console.log("response", response)
+    if(response) {
+      NotificationManager.success("", "Claim Success", 5000)
+    } else {
+      NotificationManager.success("Please check your Wallet", "Claim failed", 5000)
+    }
+  }
 
   return (
     <>
@@ -23,8 +69,10 @@ const WinnerPage = () => {
           <div className="jackpot-div grid grid-flow-col grid-cols-2">
             <div className="col-span-1 pl-6 sm:pl-10 z-20">
               <p className="jackpot-title text-[23px] sm:text-[45px] mt-12 md:mt-20">You are winner of</p>
-              <p className="sol-title text-[30px] sm:text-[50px] md:text-[60px]">Round 3!</p>
-              <div className="buy-button mt-[70px] sm:mt-[120px] md:mt-[80px] lg:mt-[160px] mb-[20px] sm:mb-[30px] py-[5px] w-[110px] sm:w-40 text-[15px] sm:text-[20px]">BUY TICKET</div>
+              <p className="sol-title text-[30px] sm:text-[50px] md:text-[60px]">Round {roundData.roundName}!</p>
+              <div className="buy-button mt-[70px] sm:mt-[120px] md:mt-[80px] lg:mt-[160px] mb-[20px] sm:mb-[30px] py-[5px] w-[110px] sm:w-40 text-[15px] sm:text-[20px]"
+              onClick={() => {handleClaim()}}
+              >Claim</div>
             </div>
             <img className="col-span-1 justify-self-end winner-hologram m-auto sm:my-[40px] h-[200px] w-[220px] sm:h-[300px] sm:w-96 lg:h-[400px] lg:w-[500px] sm:mb-[30px] z-20" alt=""></img>
             <div className="solana-div h-5/6 z-10">
@@ -32,20 +80,21 @@ const WinnerPage = () => {
           </div>
           <div className="grid grid-flow-col grid-rows-3 sm:grid-rows-none md:grid-cols-3 gap-2 sm:gap-1 md:gap-2 lg:gap-8 mt-[10px] info-total-div">
             <div className="md:col-span-1 info-div px-[30px] sm:px-[20px] py-[15px] sm:py-[20px]">
-              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">3h 16m 35s</p>
-              <p className="deps-title text-[23px] md:text-[30px]">Round 3</p>
+              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{parseInt(timeSecond / 3600)}h {parseInt(timeSecond % 3600 / 60)}m {parseInt(timeSecond % 60)}s</p>
+              <p className="deps-title text-[23px] md:text-[30px]">Round {roundData.roundName}</p>
             </div>
             <div className="md:col-span-1 info-div px-[30px] sm:px-[20px] py-[15px] sm:py-[20px]">
-              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">5678/10000</p>
+              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{roundData.ticketSold}/{roundData.totalTicket}</p>
               <p className="deps-title text-[23px] md:text-[30px]">Tickets Sold</p>
             </div>
             <div className="md:col-span-1 info-div px-[30px] sm:px-[20px] py-[15px] sm:py-[20px]">
-              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">2500 SOL</p>
+              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{roundData.tvl} SOL</p>
               <p className="deps-title text-[23px] md:text-[30px]">Jackpot</p>
             </div>
           </div>
         </div>
       </div>
+      <NotificationContainer/>
     </>
   );
 }

@@ -127,6 +127,11 @@
           "name": "recentBlockhashes",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []
@@ -257,20 +262,16 @@
             "type": "publicKey"
           },
           {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
             "name": "rand",
             "type": "publicKey"
           },
           {
             "name": "feeReceiver",
             "type": "publicKey"
-          },
-          {
-            "name": "winner",
-            "type": "publicKey"
-          },
-          {
-            "name": "fee",
-            "type": "u64"
           },
           {
             "name": "bump",
@@ -295,6 +296,10 @@
           {
             "name": "winner",
             "type": "publicKey"
+          },
+          {
+            "name": "winningTicket",
+            "type": "u64"
           },
           {
             "name": "totalTicket",

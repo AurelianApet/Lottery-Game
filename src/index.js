@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 
 // Import styles
 import "./assets/main.css";
+import 'react-notifications/lib/notifications.css';
 
 ReactDOM.render(
   <React.StrictMode>

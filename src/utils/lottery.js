@@ -63,7 +63,7 @@ export async function getCurrentRound(connection, wallet) {
     let roundAccounts = await connection.getProgramAccounts(programId,
       {
         dataSlice: {length: 0, offset: 0},
-        filters: [{dataSize: 153}, {memcmp:{offset:8, bytes: POOL.toBase58()}}]
+        filters: [{dataSize: 161}, {memcmp:{offset:8, bytes: POOL.toBase58()}}]
       })
   
     let currentRound = {
@@ -84,18 +84,16 @@ export async function getCurrentRound(connection, wallet) {
           currentRound = {
             roundName: roundData.roundName,
             totalTicket : Number(roundData.totalTicket),
-            // ticketSold : 0,
-            // timeRemained : 0,
-            winningTicket : 0,
-            tvl: Number(roundData.tvl),
+            winningTicket : Number(roundData.winningTicket),
+            tvl: Number(roundData.tvl)/1e9,
             finished: roundData.finished,
             claimed: roundData.claimed
           };
           let ticketLedger = await program.account.ticketList.fetch(roundData.ticketLedger);
           currentRound.ticketSold = ticketLedger.lastNumber;
-          console.log(Number(roundData.roundPeriod))
           currentRound.timeRemained = parseInt(Number(roundData.startTime) + Number(roundData.roundPeriod) - Date.now()/1000);
-
+          currentRound.timeRemained = currentRound.timeRemained >0 ? currentRound.timeRemained : 0;
+          
           break;
         }
       }
@@ -160,8 +158,10 @@ export async function startRound(connection, wallet, roundName, totalTicket, per
     )
 
     await sendTransaction(transaction, [ticketLedger], wallet, connection);
+    return true;
   } catch (error) {
     console.log(error)
+    return false;
   }
 }
 
@@ -188,6 +188,69 @@ export async function withdraw(connection, wallet, amount, roundName) {
     )
 
     await sendTransaction(transaction, [], wallet, connection);
+    return true;
+  } catch (error) {
+    console.log(error)
+    return false;
+  }
+}
+
+export async function buyTicket(connection, wallet, roundName) {
+  try {
+    let provider = new anchor.AnchorProvider(connection, wallet, confirmOption)
+    let program = new anchor.Program(idl, programId, provider)
+
+    let transaction = new Transaction();
+    let [round,] = await PublicKey.findProgramAddress([POOL.toBuffer(), Buffer.from(roundName)], programId)
+    let poolData = await program.account.pool.fetch(POOL);
+    console.log(poolData)
+    let roundData = await program.account.round.fetch(round);
+
+    console.log(roundData)
+    transaction.add (
+      program.instruction.buyTicket(
+        {
+          accounts: {
+            owner : wallet.publicKey,
+            pool : POOL,
+            feeReceiver : poolData.feeReceiver,
+            round : round,
+            ticketLedger : roundData.ticketLedger,
+            systemProgram : anchor.web3.SystemProgram.programId,
+          }
+        }
+      )
+    )
+
+    await sendTransaction(transaction, [], wallet, connection);
+    return true;
+  } catch (error) {
+    console.log(error)
+    return false;
+  }
+}
+
+export async function claim(connection, wallet, roundName) {
+  try {
+    let provider = new anchor.AnchorProvider(connection, wallet, confirmOption)
+    let program = new anchor.Program(idl, programId, provider)
+
+    let transaction = new Transaction();
+    let [round,] = await PublicKey.findProgramAddress([POOL.toBuffer(), Buffer.from(roundName)], programId)
+
+    transaction.add (
+      program.instruction.claim(
+        {
+          accounts: {
+            owner : wallet.publicKey,
+            pool : POOL,
+            round : round,
+          }
+        }
+      )
+    )
+
+    await sendTransaction(transaction, [], wallet, connection);
   } catch (error) {
     console.log(error)
   }
@@ -200,5 +263,9 @@ export async function getRoundData(connection, wallet){
   let [round,bump] = await PublicKey.findProgramAddress([POOL.toBuffer(), Buffer.from("1")], programId)
 
 	let roundData = await program.account.round.fetch(round)
+
   console.log(roundData)
+  let ticketLedger = await program.account.ticketList.fetch(roundData.ticketLedger);
+  console.log(ticketLedger)
+  console.log(ticketLedger.ticketLedger[1].owner.toBase58());
 }

@@ -28,7 +28,8 @@ const AdminPage = () => {
   }
 
   useEffect(() => {
-    setTimeSecond(parseInt(roundData.timeRemained))
+    if(parseInt(roundData.timeRemained) > 0)
+      setTimeSecond(parseInt(roundData.timeRemained))
   }, [roundData])
 
   useEffect(() => {
@@ -58,8 +59,6 @@ const AdminPage = () => {
             <img className="grow my-auto top-title w-64" src="assets/image/toptitle.png" alt="" />
           </div>
           <div className="row-span-auto col-span-12 sm:col-start-8 md:col-start-9 sm:col-span-5 md:col-span-4 my-auto flex flex-auto justify-evenly gap-1">
-            {/* <div className="top-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Result</div>
-            <div className="top-button connect-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Connect Wallet</div> */}
             <WalletMultiButton />
           </div>
         </div>
@@ -68,9 +67,9 @@ const AdminPage = () => {
             <div className="time-count-div row-span-auto col-span-2 sm:col-span-1">
               <div className="solana-div h-3/4 z-10 sm:hidden">
               </div>
-              <p className="jackpot-title text-[23px] sm:text-[45px] mt-12 md:mt-20 z-20 pl-6 sm:pl-10">
+              <p className="jackpot-title text-[23px] sm:text-[45px] mt-12 md:mt-24 z-20 pl-6 sm:pl-10">
                 Round {roundData.roundName === "0" ? "1": roundData.roundName}: {roundData.roundName == "0" ? "Not started": (roundData.finished ? "Finished" : "In progress")} </p>
-              <div className="grid grid-flow-col grid-cols-3 mt-[40px] sm:mt-[90px] md:mt-[50px] lg:mt-[130px] mb-[20px] z-20 justify-items-center">
+              <div className="grid grid-flow-col grid-cols-3 mt-[40px] sm:mt-[90px] md:mt-[50px] lg:mt-[130px] mb-[6px] z-20 justify-items-center">
                 <div className="col-span-1 time-show-button sm:mb-[60px] py-[18px] w-[90px] sm:w-32 text-[20px] sm:text-[50px]">{parseInt(timeSecond / 3600)}h</div>
                 <div className="col-span-1 time-show-button sm:mb-[60px] py-[18px] w-[90px] sm:w-32 text-[20px] sm:text-[50px]">{parseInt(timeSecond % 3600 / 60)}m</div>
                 <div className="col-span-1 time-show-button sm:mb-[60px] py-[18px] w-[90px] sm:w-32 text-[20px] sm:text-[50px]">{parseInt(timeSecond % 60)}s</div>

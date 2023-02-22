@@ -1,16 +1,10 @@
 import React, { Fragment } from "react";
-import { WalletMultiButton, setVisible } from '@solana/wallet-adapter-react-ui';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-// import { useWalletModal } from '@solana/wallet-adapter';
 
 const BuyTicketPage = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
-  // const { setVisible } = useWalletModal();
-    
-  // const connect = () => {
-  //     setVisible(true)
-  // }
 
   return (
     <>
@@ -22,8 +16,6 @@ const BuyTicketPage = () => {
             <img className="grow my-auto top-title w-64" src="assets/image/toptitle.png" alt="" />
           </div>
           <div className="row-span-auto col-span-12 sm:col-start-8 md:col-start-9 sm:col-span-5 md:col-span-4 my-auto flex flex-auto justify-evenly gap-1">
-            {/* <div className="top-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Result</div> */}
-            {/* <div className="top-button connect-button text-[19px] sm:text-[19px] md:text-[20px] py-[18px]">Connect Wallet</div> */}
             <WalletMultiButton />
           </div>
         </div>
@@ -53,8 +45,6 @@ const BuyTicketPage = () => {
             </div>
           </div>
         </div>
-        {/* <div className="solana-div top-[150px] w-full h-1/3 z-10">
-        </div> */}
       </div>
     </>
   );

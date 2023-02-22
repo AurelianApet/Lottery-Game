@@ -79,7 +79,7 @@ const AdminPage = () => {
             <div className="row-span-auto col-span-2 sm:col-span-1 grid grid-flow-col grid-rows-none sm:grid-rows-2 sm:px-10 h-auto">
               <div className="row-span-1 row-start-2 grid grid-flow-col grid-rows-2 sm:grid-rows-3">
                 <div className="row-span-1 sm:row-span-2 winner-ticket-div pt-3">
-                  <p className="jackpot-title text-[23px] mx-10 sm:text-[45px] z-20">Winner ticket: </p>
+                  <p className="jackpot-title text-[23px] mx-10 sm:text-[45px] z-20">Winning ticket: </p>
                   <p className="jackpot-title text-[23px] mx-10 sm:text-[45px] text-right z-20">{roundData.winningTicket}</p>
 
                 </div>

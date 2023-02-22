@@ -218,6 +218,7 @@
               linear-gradient(to right, rgba(209, 228, 255, 1), rgba(142, 183, 238, 0), rgba(80, 140, 221, 1)) border-box;
   border-radius: 30px;
   border: 3px solid transparent;
+  cursor: pointer;
 }
 
 .buy-button:hover {

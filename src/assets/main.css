@@ -630,6 +630,9 @@ video {
 .mr-6 {
 	margin-right: 1.5rem;
 }
+.block {
+	display: block;
+}
 .flex {
 	display: flex;
 }
@@ -734,6 +737,9 @@ video {
 }
 .justify-items-end {
 	justify-items: end;
+}
+.justify-items-center {
+	justify-items: center;
 }
 .gap-2 {
 	gap: 0.5rem;
@@ -1063,6 +1069,14 @@ video {
 		padding-top: 5px;
 	}
 
+	.sm\:pl-12 {
+		padding-left: 3rem;
+	}
+
+	.sm\:pl-14 {
+		padding-left: 3.5rem;
+	}
+
 	.sm\:text-\[19px\] {
 		font-size: 19px;
 	}
@@ -1115,6 +1129,10 @@ video {
 
 	.md\:mt-\[80px\] {
 		margin-top: 80px;
+	}
+
+	.md\:mt-24 {
+		margin-top: 6rem;
 	}
 
 	.md\:h-screen {

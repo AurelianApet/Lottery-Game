@@ -31,7 +31,7 @@ import ErrorPage from "./pages/error";
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 function App() {
-  const solNetwork = WalletAdapterNetwork.Mainnet;
+  const solNetwork = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
   // initialise all the wallets you want to use
   const wallets = useMemo(

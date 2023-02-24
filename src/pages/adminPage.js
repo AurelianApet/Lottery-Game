@@ -3,6 +3,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { getCurrentRound, startRound, withdraw } from "../utils/lottery";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { ThreeDots } from 'react-loader-spinner'
 
 let init = true
 const AdminPage = () => {
@@ -20,9 +21,11 @@ const AdminPage = () => {
     claimed: true
   })
   const [timeSecond, setTimeSecond] = useState(0);
+  const [txLoading, setTxLoading] = useState(false);
 
   if(wallet.publicKey !== null && init){
     getCurrentRound(connection.connection, wallet).then((res) => {
+      console.log("res", res)
       setRoundData(res)
     })
     init = false
@@ -47,6 +50,8 @@ const AdminPage = () => {
       NotificationManager.warning("", "Please connect Wallet!", 5000)
       return;
     }
+
+    setTxLoading(true);
     let response = await startRound(connection.connection, wallet, (Number(roundData.roundName)+1).toString(), 10000, 24 * 3600)
     console.log("response", response)
     if(response) {
@@ -54,6 +59,7 @@ const AdminPage = () => {
     } else {
       NotificationManager.error("Please check your Wallet", `Failed starting New Round ${Number(roundData.roundName) + 1}`, 5000)
     }
+    setTxLoading(false);
   }
 
   const handleWithdraw = async () => {
@@ -62,6 +68,7 @@ const AdminPage = () => {
       return;
     }
 
+    setTxLoading(true);
     let response = await withdraw(connection.connection, wallet, roundData.tvl, roundData.roundName)
     console.log("response", response)
     if(response) {
@@ -69,6 +76,7 @@ const AdminPage = () => {
     } else {
       NotificationManager.success("Please check your Wallet", "Withdraw failed", 5000)
     }
+    setTxLoading(false);
   }
 
   return (
@@ -76,8 +84,8 @@ const AdminPage = () => {
       <div className="body-div w-auto h-auto sm:h-screen md:h-screen">
         <div className="grid grid-flow-col grid-rows-2 sm:grid-rows-none grid-cols-12 pt-2 px-2 md:px-10 h-32 sm:h-24 md:h-24 lg:h-24">
           <div className="row-span-auto col-span-12 sm:col-span-7 md:col-span-7 flex flex-auto justify-center sm:justify-around md:justify-start gap-2">
-            <img className="grow w-8 sm:w-12 h-8 sm:h-12 my-auto ml-4" src="assets/image/discord.png" alt="" />
-            <img className="grow w-8 sm:w-12 h-8 sm:h-12 my-auto mx-2" src="assets/image/twitter.png" alt="" />
+            <img className="grow w-8 sm:w-12 h-8 sm:h-12 my-auto ml-4" src="assets/image/discord.png" alt="" onClick={() => { window.open("https://discord.com/invite/nveRe9y7A8", "_blank") }}/>
+            <img className="grow w-8 sm:w-12 h-8 sm:h-12 my-auto mx-2" src="assets/image/twitter.png" alt="" onClick={() => { window.open("https://twitter.com/platypuspickled", "_blank") }}/>
             <img className="grow my-auto top-title w-64" src="assets/image/toptitle.png" alt="" />
           </div>
           <div className="row-span-auto col-span-12 sm:col-start-8 md:col-start-9 sm:col-span-5 md:col-span-4 my-auto flex flex-auto justify-evenly gap-1">
@@ -107,13 +115,39 @@ const AdminPage = () => {
                 <div className="row-span-1 grid grid-flow-col grid-cols-2 flex-auto justify-items-end pb-5">
                   <div className="col-span-1 buy-button mt-[30px] sm:mt-[10px] pt-[10px] sm:pt-[5px] w-[160px] sm:w-56 text-[20px] sm:text-[25px] justify-self-start"
                   disabled={roundData.tvl ===0}
-                  onClick={() => {handleWithdraw()}}
-                  >WITHDRAW</div>
+                  onClick={() => { !txLoading && handleWithdraw() }}
+                  >
+                  {
+                    txLoading ? <ThreeDots 
+                    height="30" 
+                    width="80" 
+                    radius="9"
+                    color="#4fa94d" 
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{"justifyContent": "center"}}
+                    wrapperClassName=""
+                    visible={true}
+                    /> : "WITHDRAW"
+                  }
+                  </div>
                   <div className="col-span-1 buy-button mt-[30px] sm:mt-[10px] pt-[10px] sm:pt-[5px] w-[160px] sm:w-56 text-[20px] sm:text-[25px] justify-self-end"
                   disabled={!roundData.finished}
-                  onClick={() => {handleStartNewRound()}}
+                  onClick={() => { !txLoading && handleStartNewRound() }}
                   // disable this button when roundData.finished == false || roundData.claimed == false
-                  > START ROUND {Number(roundData.roundName)+1}</div>
+                  >
+                  {
+                    txLoading ? <ThreeDots 
+                    height="30" 
+                    width="80" 
+                    radius="9"
+                    color="#4fa94d" 
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{"justifyContent": "center"}}
+                    wrapperClassName=""
+                    visible={true}
+                    /> : "START ROUND " + (Number(roundData.roundName) + 1)
+                  }
+                  </div>
                 </div>
               </div>
             </div>
@@ -122,7 +156,7 @@ const AdminPage = () => {
           </div>
           <div className="grid grid-flow-col grid-rows-3 sm:grid-rows-none md:grid-cols-3 gap-2 sm:gap-1 md:gap-2 lg:gap-8 mt-[10px] info-total-div">
             <div className="md:col-span-1 info-div px-[30px] sm:px-[20px] py-[15px] sm:py-[20px]">
-              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{parseInt(timeSecond / 3600)}h {parseInt(timeSecond % 3600 / 60)}m {parseInt(timeSecond % 60)}s</p>
+              <p className="info-title text-[28px] md:text-[36px] lg:text-[45px]">{(roundData.timeRemained === 0 && timeSecond === 0) ? "Finished" : `${parseInt(timeSecond / 3600)}h ${parseInt(timeSecond % 3600 / 60)}m ${parseInt(timeSecond % 60)}s`}</p>
               <p className="deps-title text-[23px] md:text-[30px]">Round {roundData.roundName}</p>
             </div>
             <div className="md:col-span-1 info-div px-[30px] sm:px-[20px] py-[15px] sm:py-[20px]">

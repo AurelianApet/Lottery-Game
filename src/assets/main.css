@@ -563,6 +563,9 @@ video {
 .link:hover {
 	text-decoration: underline;
 }
+.visible {
+	visibility: visible;
+}
 .z-10 {
 	z-index: 10;
 }

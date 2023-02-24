@@ -1,5 +1,5 @@
 import * as anchor from "@project-serum/anchor";
-import { PROGRAM_ID, POOL_ADDRESS } from './constants';
+import { PROGRAM_ID, POOL_ADDRESS, ADMIN_ADDRESS } from './constants';
 import {
     Keypair,
     PublicKey,
@@ -72,6 +72,8 @@ export async function getCurrentRound(connection, wallet) {
       ticketSold : 0,
       timeRemained : 0,
       winningTicket : 0,
+      adminAddress : ADMIN_ADDRESS,
+      winnerAddress : "winner",
       tvl: 0,
       finished: true,
       claimed: true
@@ -85,6 +87,7 @@ export async function getCurrentRound(connection, wallet) {
             roundName: roundData.roundName,
             totalTicket : Number(roundData.totalTicket),
             winningTicket : Number(roundData.winningTicket),
+            winnerAddress : roundData.winner.toBase58(),
             tvl: Number(roundData.tvl)/1e9,
             finished: roundData.finished,
             claimed: roundData.claimed

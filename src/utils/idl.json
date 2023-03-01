@@ -16,17 +16,17 @@
           "isSigner": false
         },
         {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "rand",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "feeReceiver",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "winner",
           "isMut": false,
           "isSigner": false
         },
@@ -40,10 +40,6 @@
         {
           "name": "bump",
           "type": "u8"
-        },
-        {
-          "name": "fee",
-          "type": "u64"
         }
       ]
     },
@@ -417,36 +413,41 @@
     },
     {
       "code": 307,
+      "name": "InvalidAdmin",
+      "msg": "Invalid admin"
+    },
+    {
+      "code": 308,
       "name": "InvalidPoolLedger",
       "msg": "Invalid pool ledger"
     },
     {
-      "code": 308,
+      "code": 309,
       "name": "InvalidPeriod",
       "msg": "Invalid period"
     },
     {
-      "code": 309,
+      "code": 310,
       "name": "InsufficentFunds",
       "msg": "Insufficent Funds"
     },
     {
-      "code": 310,
+      "code": 311,
       "name": "InvalidTokenMint",
       "msg": "Invalid token mint"
     },
     {
-      "code": 311,
+      "code": 312,
       "name": "InvalidWinner",
       "msg": "Invalid winner"
     },
     {
-      "code": 312,
+      "code": 313,
       "name": "InvalidWithdrawAmount",
       "msg": "Invalid withdraw amount"
     },
     {
-      "code": 313,
+      "code": 314,
       "name": "IncorrectSlotHashesPubkey",
       "msg": "Incorrect collection NFT authority"
     }

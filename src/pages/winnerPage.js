@@ -56,7 +56,7 @@ const WinnerPage = () => {
     if(response) {
       NotificationManager.success("", "Claim Success", 5000)
     } else {
-      NotificationManager.success("Please check your Wallet", "Claim failed", 5000)
+      NotificationManager.warning("Please check your Wallet", "Claim failed", 5000)
     }
     setTxLoading(false);
   }

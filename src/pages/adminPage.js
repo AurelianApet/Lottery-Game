@@ -22,6 +22,7 @@ const AdminPage = () => {
   })
   const [timeSecond, setTimeSecond] = useState(0);
   const [txLoading, setTxLoading] = useState(false);
+  const [txLoadingTwo, setTxLoadingTwo] = useState(false);
 
   if(wallet.publicKey !== null && init){
     getCurrentRound(connection.connection, wallet).then((res) => {
@@ -52,12 +53,12 @@ const AdminPage = () => {
     }
 
     setTxLoading(true);
-    let response = await startRound(connection.connection, wallet, (Number(roundData.roundName)+1).toString(), 10000, 24 * 3600)
+    let response = await startRound(connection.connection, wallet, (Number(roundData.roundName)+1).toString(), 10000, 14 * 24 * 3600)
     console.log("response", response)
     if(response) {
       NotificationManager.success("", `Start New Round ${Number(roundData.roundName) + 1}`, 5000)
     } else {
-      NotificationManager.error("Please check your Wallet", `Failed starting New Round ${Number(roundData.roundName) + 1}`, 5000)
+      NotificationManager.warning("Please check your Wallet", `Failed starting New Round ${Number(roundData.roundName) + 1}`, 5000)
     }
     setTxLoading(false);
   }
@@ -68,15 +69,15 @@ const AdminPage = () => {
       return;
     }
 
-    setTxLoading(true);
+    setTxLoadingTwo(true);
     let response = await withdraw(connection.connection, wallet, roundData.tvl, roundData.roundName)
     console.log("response", response)
     if(response) {
       NotificationManager.success("", "Withdraw Success", 5000)
     } else {
-      NotificationManager.success("Please check your Wallet", "Withdraw failed", 5000)
+      NotificationManager.warning("Please check your Wallet", "Withdraw failed", 5000)
     }
-    setTxLoading(false);
+    setTxLoadingTwo(false);
   }
 
   return (
@@ -115,10 +116,10 @@ const AdminPage = () => {
                 <div className="row-span-1 grid grid-flow-col grid-cols-2 flex-auto justify-items-end pb-5">
                   <div className="col-span-1 buy-button mt-[30px] sm:mt-[10px] pt-[10px] sm:pt-[5px] w-[160px] sm:w-56 text-[20px] sm:text-[25px] justify-self-start"
                   disabled={roundData.tvl ===0}
-                  onClick={() => { !txLoading && handleWithdraw() }}
+                  onClick={() => { !txLoadingTwo && handleWithdraw() }}
                   >
                   {
-                    txLoading ? <ThreeDots 
+                    txLoadingTwo ? <ThreeDots 
                     height="30" 
                     width="80" 
                     radius="9"

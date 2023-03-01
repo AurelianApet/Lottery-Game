@@ -1,5 +1,5 @@
 import React, { Suspense, useMemo } from "react";
-import { clusterApiUrl } from '@solana/web3.js';
+import { Connection } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
     GlowWalletAdapter,
@@ -31,8 +31,8 @@ import ErrorPage from "./pages/error";
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 function App() {
-  const solNetwork = WalletAdapterNetwork.Devnet;
-  const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
+  const solNetwork = WalletAdapterNetwork.Mainnet;
+  const endpoint = "https://tiniest-aged-yard.solana-mainnet.quiknode.pro/8f5d72ec7dd3e717884879a70107ff613b304f3f/";
   // initialise all the wallets you want to use
   const wallets = useMemo(
       () => [

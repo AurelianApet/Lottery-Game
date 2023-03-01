@@ -8,7 +8,8 @@ import { useMemo } from 'react'
 
 
 const WalletConnectionProvider = ({ children }) => {
-  const endpoint = useMemo(() => 'https://api.devnet.solana.com', [])
+  // const endpoint = useMemo(() => 'https://api.devnet.solana.com', [])
+  const endpoint = useMemo(() => 'https://tiniest-aged-yard.solana-mainnet.quiknode.pro/8f5d72ec7dd3e717884879a70107ff613b304f3f/', [])
 
   const wallets = useMemo(() => [new PhantomWalletAdapter()], [])
 

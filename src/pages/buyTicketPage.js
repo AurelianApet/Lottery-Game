@@ -56,7 +56,7 @@ const BuyTicketPage = () => {
       return;
     }
 
-    if(roundData.timeRemained === 0 && timeSecond === 0) {
+    if(roundData.timeRemained === 0 && timeSecond === 0 && roundData.roundName !== "0") {
       NotificationManager.warning("", `Round ${roundData.roundName} Finished`, 5000)
     }
 

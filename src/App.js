@@ -1,5 +1,5 @@
 import React, { Suspense, useMemo } from "react";
-import { Connection } from '@solana/web3.js';
+import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
     GlowWalletAdapter,

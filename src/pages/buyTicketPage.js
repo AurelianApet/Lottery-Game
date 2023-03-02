@@ -59,7 +59,7 @@ const BuyTicketPage = () => {
     if(roundData.timeRemained === 0 && timeSecond === 0 && roundData.roundName !== "0") {
       NotificationManager.warning("", `Round ${roundData.roundName} Finished`, 5000)
     }
-
+    console.log("wallet", wallet, connection.connection)
     setTxLoading(true);
     let response = await buyTicket(connection.connection, wallet, roundData.roundName);
     if(response) {

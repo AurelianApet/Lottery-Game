@@ -82,7 +82,7 @@ export async function getCurrentRound(connection, wallet) {
     if (roundAccounts.length > 0) {
       for (let i = 0; i < roundAccounts.length; i ++) {
         let roundData = await program.account.round.fetch(roundAccounts[i].pubkey);
-        if (!roundData.finished) {
+        if (!roundData.finished || !roundData.claimed) {
           currentRound = {
             roundName: roundData.roundName,
             totalTicket : Number(roundData.totalTicket),
@@ -128,7 +128,7 @@ export async function startRound(connection, wallet, roundName, totalTicket, per
     let transaction = new Transaction();
 
     let ticketLedger = Keypair.generate()
-    let ticketLedgerSize = 8 + 36 + 40 * totalTicket;
+    let ticketLedgerSize = 8 + 32 + 4 + 4 + 40 * totalTicket;
     let lamports = await connection.getMinimumBalanceForRentExemption(ticketLedgerSize)
     console.log(lamports/1e9)
     transaction.add(anchor.web3.SystemProgram.createAccount({
